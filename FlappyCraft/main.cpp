@@ -14,6 +14,7 @@ int main(void) {
 		BeginDrawing();
 		ClearBackground(RAYWHITE);
 		EndDrawing();
+		//this is a test only for me understanding how git works with vs
 	}
 	CloseWindow();
 	return 0;
