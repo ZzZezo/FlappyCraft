@@ -1,17 +1,20 @@
 #pragma once
 class Player{
 	public:
-		int xPos = 200;
-		int yPos = 10;
+		float xPos = -500;
+		float yPos = 10;
 		int xScale = 50;
 		int yScale = 100;
 
-		float velocity = 0.0f; //vertival speed
-		float gravity = 0.5f; //strength of gravity
+		int speed = 3; //horizontal speed
+
+		float velocity = 0.0f; //the speed player is falling downwards
+		float gravity = 0.5f; //how much the velocity is increasing
 		float jumpStrength = 10.0f;
 
 		void updatePos() {
 			yPos += velocity;
+			xPos += speed;
 
 		}
 
