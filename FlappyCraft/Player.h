@@ -1,6 +1,7 @@
+#include "Map.h"
+#include "raylib.h"
 #include <iostream>
 using namespace std;
-#include "Map.h"
 #pragma once
 class Player{
 	public:
@@ -16,6 +17,15 @@ class Player{
 		float gravity = 0.5f; //how much the velocity is increasing
 		float jumpStrength = 10.0f;
 
+		void updatePlayer(Map map) {
+			applyGravity();
+			if (IsKeyReleased(KEY_SPACE)){//check if player is jumping
+				jump();
+			}
+			updatePos();
+			checkCollision(map);
+		}
+
 		void updatePos() {
 			yPos += velocity;
 			xPos += speed;
@@ -30,7 +40,7 @@ class Player{
 		}
 
 		int checkCollision(Map map) {
-			pColor = BLACK;
+			pColor = RAYWHITE;
 			if (xPos > 0 && yPos+yScale > 0) {
 				if (map.getElementByPos(yPos, xPos) == 1 || map.getElementByPos(yPos + yScale, xPos) == 1 || map.getElementByPos(yPos, xPos + xScale) == 1 || map.getElementByPos(yPos + yScale, xPos + xScale) == 1) {
 					pColor = RED;

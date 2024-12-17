@@ -1,17 +1,22 @@
 #include "raylib.h"
 #include <iostream>
+#include <vector>
 using namespace std;
 
 //classes
 #include "Player.h"
 #include "Map.h"
+#include "Enemy.h"
 
 //Global Variables
 const int screenWidth = 1600;
 const int screenHeight = 960;
 
+string currentScreen = "GAME";
+
 Player player;
 Map map;
+vector<Enemy> enemies;
 
 int main(void) {
 	InitWindow(screenWidth, screenHeight, "Flappy Craft");
@@ -23,27 +28,33 @@ int main(void) {
 	camera.zoom = 1.0f;
 
 	while (!WindowShouldClose()) {
-		player.applyGravity();
+		player.updatePlayer(map);
 
-		//check if player is jumping
-		if (IsKeyReleased(KEY_SPACE)) {
-			player.jump();
-		}
+		camera.target = {player.xPos + player.xScale/2, player.yPos + player.yScale / 2 };
 
-		// Update player position
-		player.updatePos();
-
-		//handle collision of player with map
-		player.checkCollision(map);
-
-		camera.target = {player.xPos + player.xScale/2, screenHeight/2};
+		enemies = map.getEnemies();
 
 		BeginDrawing();
-		BeginMode2D(camera);
-			ClearBackground(RAYWHITE);
-			map.drawMap();
-			DrawRectangle(player.xPos, player.yPos, player.xScale, player.yScale, player.pColor);
-		EndMode2D();
+			if (currentScreen == "GAME") {
+				BeginMode2D(camera);
+					ClearBackground(BLACK);
+					map.drawMap();
+					for (Enemy enemy : enemies)enemy.draw();
+					DrawRectangle(player.xPos, player.yPos, player.xScale, player.yScale, player.pColor);
+				EndMode2D();
+			}
+			else if (currentScreen == "DEATH") {
+		
+			}
+			else if (currentScreen == "WIN") {
+
+			}
+			else if (currentScreen == "PAUSE") {
+		
+			}
+			else if (currentScreen == "MENU") {
+		
+			}
 		EndDrawing();
 	}
 
