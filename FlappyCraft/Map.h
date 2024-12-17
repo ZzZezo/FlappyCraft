@@ -1,4 +1,6 @@
 #include "raylib.h"
+#include <iostream>
+using namespace std;
 #pragma once
 class Map{
 	public:
@@ -11,7 +13,7 @@ class Map{
             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0},
-            {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0},
             {0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0},
             {0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0},
             {0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0},
@@ -31,6 +33,13 @@ class Map{
                     }
                 }
             }
+        }
+
+        //converts a 2D Position into the index in tileset
+        int getElementByPos(float yPos,float xPos) {
+            int yInd = floor(yPos / tilesize);
+            int xInd = floor(xPos / tilesize);
+            return map[yInd][xInd];
         }
 };
 

@@ -33,16 +33,20 @@ int main(void) {
 		// Update player position
 		player.updatePos();
 
+		//handle collision of player with map
+		player.checkCollision(map);
+
 		camera.target = {player.xPos + player.xScale/2, screenHeight/2};
 
 		BeginDrawing();
 		BeginMode2D(camera);
 			ClearBackground(RAYWHITE);
 			map.drawMap();
-			DrawRectangle(player.xPos, player.yPos, player.xScale, player.yScale, RED);
+			DrawRectangle(player.xPos, player.yPos, player.xScale, player.yScale, player.pColor);
 		EndMode2D();
 		EndDrawing();
 	}
+
 	CloseWindow();
 	return 0;
 }
