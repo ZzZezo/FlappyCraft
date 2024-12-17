@@ -3,6 +3,9 @@
 #include <vector>
 using namespace std;
 
+#include "gui.h"
+#include "sceneManager.h"
+
 //classes
 #include "Player.h"
 #include "Map.h"
@@ -11,8 +14,6 @@ using namespace std;
 //Global Variables
 const int screenWidth = 1600;
 const int screenHeight = 960;
-
-string currentScreen = "GAME";
 
 Player player;
 Map map;
@@ -35,24 +36,25 @@ int main(void) {
 		enemies = map.getEnemies();
 
 		BeginDrawing();
-			if (currentScreen == "GAME") {
+			if (currentScene == "GAME") {
 				BeginMode2D(camera);
-					ClearBackground(BLACK);
+					ClearBackground(SKYBLUE);
 					map.drawMap();
 					for (Enemy enemy : enemies)enemy.draw();
 					DrawRectangle(player.xPos, player.yPos, player.xScale, player.yScale, player.pColor);
 				EndMode2D();
+				drawGUI(screenWidth, screenHeight, player);
 			}
-			else if (currentScreen == "DEATH") {
-		
+			else if (currentScene == "DEATH") {
+				ClearBackground(Color{224, 85, 85});
 			}
-			else if (currentScreen == "WIN") {
+			else if (currentScene == "WIN") {
 
 			}
-			else if (currentScreen == "PAUSE") {
+			else if (currentScene == "PAUSE") {
 		
 			}
-			else if (currentScreen == "MENU") {
+			else if (currentScene == "MENU") {
 		
 			}
 		EndDrawing();

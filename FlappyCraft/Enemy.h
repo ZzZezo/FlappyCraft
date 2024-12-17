@@ -13,7 +13,11 @@ class Enemy
 		}
 
 		void draw() {
-			DrawRectangle(xPos, yPos, xScale, yScale, RED);
+			DrawRectangle(xPos, yPos, xScale, yScale, ORANGE);
+		}
+
+		void move() {
+
 		}
 };
 
