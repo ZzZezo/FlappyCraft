@@ -35,9 +35,17 @@ class Player{
 		void updatePlayer(Map& map) {
 			if(currentScene != "GAME") return;//dont update player if not in game
 			applyGravity();
+
+			//check mouse input
+			if(IsMouseButtonReleased(MOUSE_BUTTON_LEFT))useHandItem("LEFT"); //leftclick -> use item in left hand
+			if(IsMouseButtonReleased(MOUSE_BUTTON_RIGHT))useHandItem("RIGHT"); //rightclick -> use item in right hand
+			
+			if(IsKeyReleased(KEY_F))swapHands();
+
 			if (IsKeyReleased(KEY_SPACE)){//check if player is jumping
 				jump();
 			}
+
 			updatePos();
 			updateColor();
 			checkCollision(map);
@@ -107,15 +115,16 @@ class Player{
 
 		void useHandItem(string hand) {
 			if (hand == "LEFT") {
-				
+				useItem(LeftHand);
 			}
 			if (hand == "RIGHT") {
-				
+				useItem(RightHand);
 			}
 		}
 
 		void useItem(string item) {
 			if (item == "EMPTY") return;
+			if(item == "TEST") cout << "Test item used";
 		}
 
 		int pickUpItem(string item) {

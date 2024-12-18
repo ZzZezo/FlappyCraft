@@ -16,6 +16,6 @@ void drawGUI(int screenWidth, int screenHeight, Player player) {
 		if (i < (10 - player.health))
 			DrawRectangle(x, y, heartsSize, heartsSize, BLACK);//empty heart
 		else
-			DrawRectangle(x, y, heartsSize, heartsSize, RED); //full heart
+			DrawRectangle(x, y, heartsSize, heartsSize, RED);//full heart
 	}
 }
