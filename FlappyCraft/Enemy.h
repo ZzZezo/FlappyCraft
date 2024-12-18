@@ -17,7 +17,7 @@ class Enemy
 		}
 
 		void move() {
-
+			
 		}
 };
 

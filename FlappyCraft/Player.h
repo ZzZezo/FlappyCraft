@@ -1,9 +1,15 @@
 #include "Map.h"
 #include "raylib.h"
 #include <iostream>
+#include <array>
 using namespace std;
 #include "sceneManager.h"
 #pragma once
+
+#define ID_BLOCK 1
+#define ID_ENEMY 2
+#define ID_ITEM 3
+
 class Player{
 	public:
 		float xPos = -500;
@@ -17,13 +23,16 @@ class Player{
 		int healthImmunityTimer = 0; //player can only be hurt when this is zero
 		const int healthImmunityTimerMax = 30; //the value to reset the timer back to
 
+		string LeftHand = "EMPTY";
+		string RightHand = "EMPTY";
+
 		float speed = 1.5f; //horizontal speed
 
 		float velocity = 0.0f; //the speed player is falling downwards
 		float gravity = 0.5f; //how much the velocity is increasing
 		float jumpStrength = 10.0f;
 
-		void updatePlayer(Map map) {
+		void updatePlayer(Map& map) {
 			if(currentScene != "GAME") return;//dont update player if not in game
 			applyGravity();
 			if (IsKeyReleased(KEY_SPACE)){//check if player is jumping
@@ -53,19 +62,30 @@ class Player{
 			velocity += gravity;
 		}
 
-		int checkCollision(Map map) {
+		int checkCollision(Map& map) {
 			if (xPos + xScale > 0 && yPos+yScale > 0) {
-				if (map.getElementByPos(yPos, xPos) == 1 || map.getElementByPos(yPos + yScale, xPos) == 1 || map.getElementByPos(yPos, xPos + xScale) == 1 || map.getElementByPos(yPos + yScale, xPos + xScale) == 1) {
+				if (checkCollisionType(ID_BLOCK, map) > 0){
 					getDamaged(1);
 				}
-				if (map.getElementByPos(yPos, xPos) == 2 || map.getElementByPos(yPos + yScale, xPos) == 2 || map.getElementByPos(yPos, xPos + xScale) == 2 || map.getElementByPos(yPos + yScale, xPos + xScale) == 2) {
+				if (checkCollisionType(ID_ENEMY ,map) > 0){
 					getDamaged(2);
 				}
-				else if (map.getElementByPos(yPos, xPos) == 0 && map.getElementByPos(yPos + yScale, xPos) == 0 && map.getElementByPos(yPos, xPos + xScale) == 0 && map.getElementByPos(yPos + yScale, xPos + xScale) == 0) {
+				if (checkCollisionType(ID_ITEM ,map) > 0){
+					pickUpItemByPos(ID_ITEM, map, "TEST");
+				}
+				else if (checkCollisionType(0, map)){
 					return 0;
 				}
 			}
 			return 1;
+		}
+
+		int checkCollisionType(int type, Map& map){
+			if(map.getElementByPos(yPos, xPos) == type) return 1;
+			if(map.getElementByPos(yPos + yScale, xPos) == type) return 2;
+			if(map.getElementByPos(yPos, xPos + xScale) == type) return 3;
+			if(map.getElementByPos(yPos + yScale, xPos + xScale) == type) return 4;
+			return 0;
 		}
 
 		void getDamaged(int dmg) {
@@ -77,6 +97,49 @@ class Player{
 
 		void onDeath() {
 			changeScene("DEATH");//change to death scene
+		}
+
+		void swapHands() {
+			string temp = LeftHand;
+			LeftHand = RightHand;
+			RightHand = temp;
+		}
+
+		void useHandItem(string hand) {
+			if (hand == "LEFT") {
+				
+			}
+			if (hand == "RIGHT") {
+				
+			}
+		}
+
+		void useItem(string item) {
+			if (item == "EMPTY") return;
+		}
+
+		int pickUpItem(string item) {
+			if(LeftHand == "EMPTY") LeftHand = item;
+			else if(RightHand == "EMPTY") RightHand = item;
+			else return 0; //returns 0 if player can't pick up item (inventory is full)
+			return 1; //returns 1 if player picked the item up
+		}
+
+		void pickUpItemByPos(int itemID, Map& map, string item) {
+			switch (checkCollisionType(itemID, map)) {
+			case 1:
+				if (pickUpItem(item) == 1) map.deleteElementByPos(yPos, xPos);
+				break;
+			case 2:
+				if (pickUpItem(item) == 1) map.deleteElementByPos(yPos + yScale, xPos);
+				break;
+			case 3:
+				if (pickUpItem(item) == 1) map.deleteElementByPos(yPos, xPos + xScale);
+				break;
+			case 4:
+				if (pickUpItem(item) == 1) map.deleteElementByPos(yPos + yScale, xPos + xScale);
+				break;
+			}
 		}
 };
 

@@ -4,6 +4,11 @@
 #include <iostream>
 using namespace std;
 #pragma once
+
+#define ID_BLOCK 1
+#define ID_ENEMY 2
+#define ID_ITEM 3
+
 class Map{
 	public:
         int tilesize = 64;
@@ -14,7 +19,7 @@ class Map{
             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0},
             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0},
-            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0},
+            {0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0},
             {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0},
             {0, 0, 1, 0, 1, 0, 2, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0},
             {0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0},
@@ -30,8 +35,20 @@ class Map{
             {
                 for (int x = 0; x < 20; x++)
                 {
-                    if (map[y][x] == 1) {
+                    if (map[y][x] == ID_BLOCK) {
                         DrawRectangle(x * tilesize, y * tilesize, tilesize, tilesize, GREEN);
+                    }
+                }
+            }
+        }
+
+        void drawItems() {
+            for (int y = 0; y < 15; y++)
+            {
+                for (int x = 0; x < 20; x++)
+                {
+                    if (map[y][x] == ID_ITEM) {
+                        DrawRectangle(x * tilesize, y * tilesize, tilesize, tilesize, WHITE);
                     }
                 }
             }
@@ -44,13 +61,19 @@ class Map{
             return map[yInd][xInd];
         }
 
+        void deleteElementByPos(float yPos, float xPos) {
+            int yInd = floor(yPos / tilesize);
+            int xInd = floor(xPos / tilesize);
+            map[yInd][xInd] = 0;
+        }
+
         vector<Enemy> getEnemies() {
             vector<Enemy> enemies;
             for (int y = 0; y < 15; y++)
             {
                 for (int x = 0; x < 20; x++)
                 {
-                    if (map[y][x] == 2) {
+                    if (map[y][x] == ID_ENEMY) {
                         enemies.push_back(Enemy(x * tilesize, y * tilesize));
                     }
                 }

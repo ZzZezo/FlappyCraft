@@ -35,11 +35,14 @@ int main(void) {
 
 		enemies = map.getEnemies();
 
+		cout << player.LeftHand << " " << player.RightHand << endl;
+
 		BeginDrawing();
 			if (currentScene == "GAME") {
 				BeginMode2D(camera);
 					ClearBackground(SKYBLUE);
 					map.drawMap();
+					map.drawItems();
 					for (Enemy enemy : enemies)enemy.draw();
 					DrawRectangle(player.xPos, player.yPos, player.xScale, player.yScale, player.pColor);
 				EndMode2D();
