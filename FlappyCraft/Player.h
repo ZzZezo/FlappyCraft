@@ -1,4 +1,5 @@
 #include "Map.h"
+#include "Enemy.h"
 #include "raylib.h"
 #include <iostream>
 #include <array>
@@ -32,7 +33,7 @@ class Player{
 		float gravity = 0.5f; //how much the velocity is increasing
 		float jumpStrength = 10.0f;
 
-		void updatePlayer(Map& map) {
+		void updatePlayer(Map& map, vector<Enemy>& enemies) {
 			if(currentScene != "GAME") return;//dont update player if not in game
 			applyGravity();
 
@@ -48,8 +49,9 @@ class Player{
 
 			updatePos();
 			updateColor();
-			checkCollision(map);
-			if(healthImmunityTimer>0)healthImmunityTimer--;
+			checkCollisionWithMap(map);
+			checkCollisonWithEnemies(enemies);
+			if(healthImmunityTimer>0) healthImmunityTimer--;
 		}
 
 		void updatePos() {
@@ -58,42 +60,53 @@ class Player{
 		}
 
 		void updateColor() {
-			if(healthImmunityTimer>0)pColor = RED;
+			if(healthImmunityTimer>0) pColor = RED;
 			else pColor = BLUE;
 		}
 
 		void jump() {
-			velocity = -jumpStrength;
+			velocity = -jumpStrength; //negative velocity makes player move upward, "resets" velocity
 		}
 
 		void applyGravity() {
-			velocity += gravity;
+			velocity += gravity; //increase the velocity to simulate grvaity
 		}
 
-		int checkCollision(Map& map) {
+		int checkCollisionWithMap(Map& map) {
 			if (xPos + xScale > 0 && yPos+yScale > 0) {
 				if (checkCollisionType(ID_BLOCK, map) > 0){
 					getDamaged(1);
-				}
-				if (checkCollisionType(ID_ENEMY ,map) > 0){
-					getDamaged(2);
 				}
 				if (checkCollisionType(ID_ITEM ,map) > 0){
 					pickUpItemByPos(ID_ITEM, map, "TEST");
 				}
 				else if (checkCollisionType(0, map)){
-					return 0;
+					return 0; //returns 0 if not colliding with anything on the map
 				}
 			}
-			return 1;
+			return 1; //returns 1 if colliding with map
 		}
 
 		int checkCollisionType(int type, Map& map){
+			//if collision detected, returns number between 1 and 4, depending on which part of the block was hit
 			if(map.getElementByPos(yPos, xPos) == type) return 1;
 			if(map.getElementByPos(yPos + yScale, xPos) == type) return 2;
 			if(map.getElementByPos(yPos, xPos + xScale) == type) return 3;
 			if(map.getElementByPos(yPos + yScale, xPos + xScale) == type) return 4;
 			return 0;
+		}
+
+		void checkCollisonWithEnemies(vector<Enemy>& enemies) {
+			for (Enemy& enemy : enemies) {
+				if (xPos < enemy.xPos + enemy.xScale &&  //right side collision
+					xPos + xScale > enemy.xPos &&       //left side collison
+					yPos < enemy.yPos + enemy.yScale && //bottom side collision
+					yPos + yScale > enemy.yPos) {       //top side collision
+
+					//if colliding
+					getDamaged(2);
+				}
+			}
 		}
 
 		void getDamaged(int dmg) {
@@ -104,7 +117,7 @@ class Player{
 		}
 
 		void onDeath() {
-			changeScene("DEATH");//change to death scene
+			changeScene("DEATH"); //change to death/Game Over scene
 		}
 
 		void swapHands() {
@@ -114,6 +127,7 @@ class Player{
 		}
 
 		void useHandItem(string hand) {
+			//function that runs on player click
 			if (hand == "LEFT") {
 				useItem(LeftHand);
 			}
@@ -123,6 +137,7 @@ class Player{
 		}
 
 		void useItem(string item) {
+			//uses the item on being called, regardless if player clicked
 			if (item == "EMPTY") return;
 			if(item == "TEST") cout << "Test item used";
 		}

@@ -1,4 +1,5 @@
 #include "raylib.h"
+#include <iostream>
 #pragma once
 class Enemy
 {
@@ -17,7 +18,7 @@ class Enemy
 		}
 
 		void move() {
-			
+			//xPos -= 2;
 		}
 };
 
