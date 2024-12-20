@@ -1,4 +1,6 @@
 # FlappyCraft
 
-A Fusion of Minecraft and Flappy Bird.
-Made in c++ using raylib
+A Fusion of Minecraft and Flappy Bird. <br/>
+Made in c++ using raylib <br/>
+
+${\color{purple}<3}$
