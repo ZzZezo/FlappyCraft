@@ -8,8 +8,7 @@ using namespace std;
 #pragma once
 
 #define ID_BLOCK 1
-#define ID_ENEMY 2
-#define ID_ITEM 3
+#define ID_ITEM 31
 
 class Player{
 	public:

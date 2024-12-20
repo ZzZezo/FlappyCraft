@@ -6,22 +6,24 @@ using namespace std;
 #pragma once
 
 #define ID_BLOCK 1
-#define ID_ENEMY 2
-#define ID_ITEM 3
+#define ID_BEE 21
+#define ID_ENEMY2 22
+#define ID_ITEM 31
+
+#define TILE_SIZE 64
 
 class Map{
 	public:
-        int tilesize = 64;
         int map[15][21] = {
             {0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0},
             {0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0},
             {0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0},
             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0},
             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0},
-            {0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0},
+            {0, 0, 0, 0, 0, 0, 0, 21, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 0},
+            {0, 0, 0, 31, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0},
             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0},
-            {0, 0, 0, 1, 0, 1, 0, 2, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0},
+            {0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0},
             {0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0},
             {0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0},
             {0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0},
@@ -36,7 +38,7 @@ class Map{
                 for (int x = 0; x < 20; x++)
                 {
                     if (map[y][x] == ID_BLOCK) {
-                        DrawRectangle(x * tilesize, y * tilesize, tilesize, tilesize, GREEN);
+                        DrawRectangle(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE, GREEN);
                     }
                 }
             }
@@ -48,7 +50,7 @@ class Map{
                 for (int x = 0; x < 20; x++)
                 {
                     if (map[y][x] == ID_ITEM) {
-                        DrawRectangle(x * tilesize, y * tilesize, tilesize, tilesize, WHITE);
+                        DrawRectangle(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE, WHITE);
                     }
                 }
             }
@@ -56,14 +58,14 @@ class Map{
 
         //converts a 2D Position into the index in tileset
         int getElementByPos(float yPos,float xPos) {
-            int yInd = floor(yPos / tilesize);
-            int xInd = floor(xPos / tilesize);
+            int yInd = floor(yPos / TILE_SIZE);
+            int xInd = floor(xPos / TILE_SIZE);
             return map[yInd][xInd];
         }
 
         void deleteElementByPos(float yPos, float xPos) {
-            int yInd = floor(yPos / tilesize);
-            int xInd = floor(xPos / tilesize);
+            int yInd = floor(yPos / TILE_SIZE);
+            int xInd = floor(xPos / TILE_SIZE);
             map[yInd][xInd] = 0;
         }
 
@@ -73,8 +75,11 @@ class Map{
             {
                 for (int x = 0; x < 20; x++)
                 {
-                    if (map[y][x] == ID_ENEMY) {
-                        enemies.push_back(Enemy(x * tilesize, y * tilesize));
+                    if (map[y][x] == ID_BEE) {
+                        enemies.push_back(Enemy(x * TILE_SIZE, y * TILE_SIZE, "BEE"));
+                    }
+                    else if (map[y][x] == ID_ENEMY2) {
+                        enemies.push_back(Enemy(x * TILE_SIZE, y * TILE_SIZE, "NONE"));
                     }
                 }
             }

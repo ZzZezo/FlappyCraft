@@ -35,7 +35,9 @@ int main(void) {
 
 		camera.target = {player.xPos + player.xScale/2, player.yPos + player.yScale / 2 };
 
-		for (Enemy& enemy : enemies) enemy.move();
+		for (Enemy& enemy : enemies){ 
+			enemy.move();
+		}
 
 		//cout << player.LeftHand << " " << player.RightHand << endl;
 		//cout << enemies[0].xPos << " " << enemies[0].yPos << endl;
