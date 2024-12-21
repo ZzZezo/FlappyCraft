@@ -1,4 +1,6 @@
 #include "Enemy.h"
+#include "Bee.h"
+#include "Skeleton.h"
 #include "raylib.h"
 #include <vector>
 #include <iostream>
@@ -7,7 +9,7 @@ using namespace std;
 
 #define ID_BLOCK 1
 #define ID_BEE 21
-#define ID_ENEMY2 22
+#define ID_SKELETON 22
 #define ID_ITEM 31
 
 #define TILE_SIZE 64
@@ -69,17 +71,17 @@ class Map{
             map[yInd][xInd] = 0;
         }
 
-        vector<Enemy> getEnemies() {
-            vector<Enemy> enemies;
+        vector<Enemy*> getEnemies() {
+            vector<Enemy*> enemies;
             for (int y = 0; y < 15; y++)
             {
                 for (int x = 0; x < 20; x++)
                 {
                     if (map[y][x] == ID_BEE) {
-                        enemies.push_back(Enemy(x * TILE_SIZE, y * TILE_SIZE, "BEE"));
+                        enemies.push_back(new Bee(x * TILE_SIZE, y * TILE_SIZE));
                     }
-                    else if (map[y][x] == ID_ENEMY2) {
-                        enemies.push_back(Enemy(x * TILE_SIZE, y * TILE_SIZE, "NONE"));
+                    else if (map[y][x] == ID_SKELETON) {
+                        enemies.push_back(new Skeleton(x * TILE_SIZE, y * TILE_SIZE));
                     }
                 }
             }

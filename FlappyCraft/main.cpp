@@ -17,7 +17,7 @@ const int screenHeight = 960;
 
 Player player;
 Map map;
-vector<Enemy> enemies;
+vector<Enemy*> enemies;
 
 int main(void) {
 	InitWindow(screenWidth, screenHeight, "Flappy Craft");
@@ -31,41 +31,43 @@ int main(void) {
 	enemies = map.getEnemies();
 
 	while (!WindowShouldClose()) {
-		player.updatePlayer(map,enemies);
+		if (currentScene == "GAME") {
+			player.updatePlayer(map, enemies);
 
-		camera.target = {player.xPos + player.xScale/2, player.yPos + player.yScale / 2 };
+			camera.target = { player.xPos + player.xScale / 2, player.yPos + player.yScale / 2 };
 
-		for (Enemy& enemy : enemies){ 
-			enemy.move();
-		}
+			vector<Enemy*> newEnemies;
+			for (Enemy*& enemy : enemies) {
+				enemy->update(enemies, newEnemies);
+			}
+			enemies.insert(enemies.end(), newEnemies.begin(), newEnemies.end());
 
-		//cout << player.LeftHand << " " << player.RightHand << endl;
-		//cout << enemies[0].xPos << " " << enemies[0].yPos << endl;
 
-		BeginDrawing();
-			if (currentScene == "GAME") {
+			BeginDrawing();
 				BeginMode2D(camera);
 					ClearBackground(SKYBLUE);
 					map.drawMap();
 					map.drawItems();
-					for (Enemy& enemy : enemies) enemy.draw();
+					for (Enemy*& enemy : enemies) enemy->draw();
 					DrawRectangle(player.xPos, player.yPos, player.xScale, player.yScale, player.pColor);
 				EndMode2D();
 				drawGUI(screenWidth, screenHeight, player);
-			}
-			else if (currentScene == "DEATH") {
+			EndDrawing();
+		}
+		else if (currentScene == "DEATH") {
+			BeginDrawing();
 				ClearBackground(Color{224, 85, 85});
-			}
-			else if (currentScene == "WIN") {
+			EndDrawing();
+		}
+		else if (currentScene == "WIN") {
 
-			}
-			else if (currentScene == "PAUSE") {
+		}
+		else if (currentScene == "PAUSE") {
 		
-			}
-			else if (currentScene == "MENU") {
+		}
+		else if (currentScene == "MENU") {
 		
-			}
-		EndDrawing();
+		}
 	}
 
 	CloseWindow();

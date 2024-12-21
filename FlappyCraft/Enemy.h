@@ -1,42 +1,26 @@
 #include "raylib.h"
 #include <iostream>
+#include <vector>
 using namespace std;
 #pragma once
 class Enemy
 {
 	public:
-		float xPos, yPos, xPosStart, yPosStart;
-		int xScale = 64;
-		int yScale = 64;
-		int moveDir = 1;
-		float moveSpeed;
-		string type;
+		float xPos, yPos;
+		int xScale;
+		int yScale;
 
-		Enemy(float x, float y, string ptype) {
+		Enemy(float x, float y) {
 			xPos = x;
 			yPos = y;
-			xPosStart = x;
-			yPosStart = y;
-			type = ptype;
-			moveSpeed = init_speed();
+			xScale = 64;
+			yScale = 64;
 		}
 
-		float init_speed() {
-			if (type == "BEE") return 2.0f;
-			return 0;
-		}
+		virtual void update(vector<Enemy*>& enemies, vector<Enemy*>& newEnemies) {}
 
-		void draw() {
+		virtual void draw() {
 			DrawRectangle(xPos, yPos, xScale, yScale, ORANGE);
-		}
-
-		void move() {
-			if(type == "BEE") moveHover(yPosStart, 150);
-		}
-
-		void moveHover(float anchorHeight, int range) {
-			yPos+=moveSpeed*moveDir;
-			if(yPos >= anchorHeight + range || yPos <= anchorHeight - range) moveDir = -moveDir;
 		}
 };
 

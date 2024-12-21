@@ -32,7 +32,7 @@ class Player{
 		float gravity = 0.5f; //how much the velocity is increasing
 		float jumpStrength = 10.0f;
 
-		void updatePlayer(Map& map, vector<Enemy>& enemies) {
+		void updatePlayer(Map& map, vector<Enemy*>& enemies) {
 			if(currentScene != "GAME") return;//dont update player if not in game
 			applyGravity();
 
@@ -95,12 +95,12 @@ class Player{
 			return 0;
 		}
 
-		void checkCollisonWithEnemies(vector<Enemy>& enemies) {
-			for (Enemy& enemy : enemies) {
-				if (xPos < enemy.xPos + enemy.xScale &&  //right side collision
-					xPos + xScale > enemy.xPos &&       //left side collison
-					yPos < enemy.yPos + enemy.yScale && //bottom side collision
-					yPos + yScale > enemy.yPos) {       //top side collision
+		void checkCollisonWithEnemies(vector<Enemy*>& enemies) {
+			for (Enemy*& enemy : enemies) {
+				if (xPos < enemy->xPos + enemy->xScale &&  //right side collision
+					xPos + xScale > enemy->xPos &&       //left side collison
+					yPos < enemy->yPos + enemy->yScale && //bottom side collision
+					yPos + yScale > enemy->yPos) {       //top side collision
 
 					//if colliding
 					getDamaged(2);
