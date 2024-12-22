@@ -9,6 +9,7 @@ class Arrow :public Enemy
 		Arrow(float x, float y) :Enemy(x, y) {
 			xScale = 64;
 			yScale = 16;
+			killable = false;
 		}
 
 		void update(vector<Enemy*>& enemies, vector<Enemy*>& newEnemies) override {

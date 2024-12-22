@@ -8,7 +8,9 @@ using namespace std;
 #pragma once
 
 #define ID_BLOCK 1
-#define ID_ITEM 31
+#define ID_SWORD 31
+#define ID_TNT 32
+#define ID_TOTEM 33
 
 class Player{
 	public:
@@ -25,6 +27,7 @@ class Player{
 
 		string LeftHand = "EMPTY";
 		string RightHand = "EMPTY";
+		string LastUsedHand = "NONE";
 
 		float speed = 1.5f; //horizontal speed
 
@@ -32,9 +35,15 @@ class Player{
 		float gravity = 0.5f; //how much the velocity is increasing
 		float jumpStrength = 10.0f;
 
+		vector<Enemy*> enemiesCurrent;
+		Map* mapCurrent;
+
 		void updatePlayer(Map& map, vector<Enemy*>& enemies) {
 			if(currentScene != "GAME") return;//dont update player if not in game
 			applyGravity();
+
+			enemiesCurrent = enemies;
+			mapCurrent = &map;
 
 			//check mouse input
 			if(IsMouseButtonReleased(MOUSE_BUTTON_LEFT))useHandItem("LEFT"); //leftclick -> use item in left hand
@@ -76,8 +85,14 @@ class Player{
 				if (checkCollisionType(ID_BLOCK, map) > 0){
 					getDamaged(1);
 				}
-				if (checkCollisionType(ID_ITEM ,map) > 0){
-					pickUpItemByPos(ID_ITEM, map, "TEST");
+				if (checkCollisionType(ID_SWORD ,map) > 0){
+					pickUpItemByPos(ID_SWORD, map, "SWORD");
+				}
+				if (checkCollisionType(ID_TNT, map) > 0) {
+					pickUpItemByPos(ID_TNT, map, "TNT");
+				}
+				if (checkCollisionType(ID_TOTEM, map) > 0) {
+					pickUpItemByPos(ID_TOTEM, map, "TOTEM");
 				}
 				else if (checkCollisionType(0, map)){
 					return 0; //returns 0 if not colliding with anything on the map
@@ -102,6 +117,7 @@ class Player{
 					yPos < enemy->yPos + enemy->yScale && //bottom side collision
 					yPos + yScale > enemy->yPos) {       //top side collision
 
+					if (!enemy->alive)return;
 					//if colliding
 					getDamaged(2);
 				}
@@ -116,6 +132,11 @@ class Player{
 		}
 
 		void onDeath() {
+			if (LeftHand == "TOTEM" || RightHand == "TOTEM")
+			{
+				useTotem();
+				return;
+			}
 			changeScene("DEATH"); //change to death/Game Over scene
 		}
 
@@ -127,6 +148,7 @@ class Player{
 
 		void useHandItem(string hand) {
 			//function that runs on player click
+			LastUsedHand = hand;
 			if (hand == "LEFT") {
 				useItem(LeftHand);
 			}
@@ -137,8 +159,11 @@ class Player{
 
 		void useItem(string item) {
 			//uses the item on being called, regardless if player clicked
-			if (item == "EMPTY") return;
+			if(item == "EMPTY") return;
 			if(item == "TEST") cout << "Test item used";
+			if(item == "SWORD") attackMelee(128);
+			if(item == "TNT") attackExplosion(128);
+			if (item == "TOTEM") return;
 		}
 
 		int pickUpItem(string item) {
@@ -163,6 +188,50 @@ class Player{
 				if (pickUpItem(item) == 1) map.deleteElementByPos(yPos + yScale, xPos + xScale);
 				break;
 			}
+		}
+
+		void attackMelee(int range) {
+			//get all enemy objects with a distance smaller than range
+			for (Enemy*& enemy : enemiesCurrent) {
+				if (abs(xPos - enemy->xPos) < range && abs(yPos - enemy->yPos) < range)//check if distance smaller than range
+				{
+					//kill if killable
+					if (!enemy->killable) return;
+					enemy->die();
+					if(LastUsedHand == "LEFT") LeftHand = "EMPTY";
+					if(LastUsedHand == "RIGHT") RightHand = "EMPTY";
+				}
+			}
+		}
+
+		void attackExplosion(int range) {
+			int yTile = floor(yPos / 64);
+			int xTile = floor(xPos / 64);
+			int rangeTile = floor(range / 64) +1;
+			cout << yTile << " " << xTile << " " << rangeTile << endl;
+			killArea(yPos, xPos, range);
+			mapCurrent->removeArea(yTile, xTile, rangeTile);
+			if (LastUsedHand == "LEFT") LeftHand = "EMPTY";
+			if (LastUsedHand == "RIGHT") RightHand = "EMPTY";
+		}
+
+		void killArea(int y, int x, int range) {
+			//get all enemy objects with a distance smaller than range
+			for (Enemy*& enemy : enemiesCurrent) {
+				if (abs(x - enemy->xPos) < range && abs(y - enemy->yPos) < range)//check if distance smaller than range
+				{
+					//kill
+					enemy->die();
+				}
+			}
+		}
+
+		void useTotem() {
+			health = 3;
+			healthImmunityTimer = healthImmunityTimerMax;
+
+			if (LeftHand == "TOTEM") LeftHand = "EMPTY";
+			else if (RightHand == "TOTEM") RightHand = "EMPTY";
 		}
 };
 

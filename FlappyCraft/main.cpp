@@ -36,6 +36,8 @@ int main(void) {
 
 			camera.target = { player.xPos + player.xScale / 2, player.yPos + player.yScale / 2 };
 
+			//cout << player.LeftHand << " " << player.RightHand << endl;
+
 			vector<Enemy*> newEnemies;
 			for (Enemy*& enemy : enemies) {
 				enemy->update(enemies, newEnemies);

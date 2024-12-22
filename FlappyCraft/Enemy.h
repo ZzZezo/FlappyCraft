@@ -9,6 +9,8 @@ class Enemy
 		float xPos, yPos;
 		int xScale;
 		int yScale;
+		bool killable = true;
+		bool alive = true;
 
 		Enemy(float x, float y) {
 			xPos = x;
@@ -21,6 +23,11 @@ class Enemy
 
 		virtual void draw() {
 			DrawRectangle(xPos, yPos, xScale, yScale, ORANGE);
+		}
+
+		void die() {
+			alive = false;
+			xPos = -1000;
 		}
 };
 

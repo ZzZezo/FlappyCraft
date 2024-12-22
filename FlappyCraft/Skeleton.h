@@ -12,10 +12,9 @@ class Skeleton:public Enemy
 
         void update(vector<Enemy*>& enemies, vector<Enemy*>& newEnemies) override {
             attackCooldown--;
-            cout << attackCooldown << endl;
             if (attackCooldown <= 0) {
                 attackCooldown = 300;
-                newEnemies.push_back(new Arrow(xPos, yPos)); // Add to temporary container
+                newEnemies.push_back(new Arrow(xPos, yPos));//add to temporary container
             }
         }
 };
