@@ -16,12 +16,17 @@ const int screenWidth = 1600;
 const int screenHeight = 960;
 
 Player player;
-Map map;
 vector<Enemy*> enemies;
+
 
 int main(void) {
 	InitWindow(screenWidth, screenHeight, "Flappy Craft");
 	SetTargetFPS(60);
+
+	Texture2D playerTexture = LoadTexture("assets/zezo.png");
+	loadGUITextures();
+
+	Map map;
 
 	Camera2D camera = { 0 };
 	camera.target = {player.xPos + player.xScale/2, player.yPos + player.yScale/2};
@@ -44,16 +49,16 @@ int main(void) {
 			}
 			enemies.insert(enemies.end(), newEnemies.begin(), newEnemies.end());
 
-
 			BeginDrawing();
 				BeginMode2D(camera);
 					ClearBackground(SKYBLUE);
 					map.drawMap();
 					map.drawItems();
 					for (Enemy*& enemy : enemies) enemy->draw();
-					DrawRectangle(player.xPos, player.yPos, player.xScale, player.yScale, player.pColor);
+					DrawTexture(playerTexture, player.xPos, player.yPos, player.pColor);
 				EndMode2D();
 				drawGUI(screenWidth, screenHeight, player);
+				DrawItems(player.LeftHand, player.RightHand);
 			EndDrawing();
 		}
 		else if (currentScene == "DEATH") {

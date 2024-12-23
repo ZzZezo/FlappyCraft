@@ -3,8 +3,9 @@
 class Arrow :public Enemy
 {
 	public:
+		Texture2D arrowTexture = LoadTexture("assets/entities/arrow.png");
 		int moveDir = -1;
-		float moveSpeed = 8.0f;
+		float moveSpeed = 12.0f;
 
 		Arrow(float x, float y) :Enemy(x, y) {
 			xScale = 64;
@@ -18,7 +19,7 @@ class Arrow :public Enemy
 		}
 
 		void draw() {
-			DrawRectangle(xPos, yPos, xScale, yScale, ORANGE);
+			DrawTexture(arrowTexture, xPos, yPos, WHITE);
 		}
 
 		void move() {

@@ -7,7 +7,8 @@ class Skeleton:public Enemy
 		int attackCooldown = 60;
 
 		Skeleton(float x, float y) :Enemy(x, y) {
-
+            attackDamage = 0;
+            enemyTexture = LoadTexture("assets/entities/skeleton.png");
 		}
 
         void update(vector<Enemy*>& enemies, vector<Enemy*>& newEnemies) override {

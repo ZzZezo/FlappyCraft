@@ -13,6 +13,7 @@ class Bee :public Enemy
 		Bee(float x, float y):Enemy(x,y){
 			xPosStart = x;
 			yPosStart = y;
+			enemyTexture = LoadTexture("assets/entities/bee.png");
 		}
 
 		void update(vector<Enemy*>& enemies, vector<Enemy*>& newEnemies) override {

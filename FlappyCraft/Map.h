@@ -7,7 +7,8 @@
 using namespace std;
 #pragma once
 
-#define ID_BLOCK 1
+#define ID_DIRT 1
+#define ID_GRASS 2
 #define ID_BEE 21
 #define ID_SKELETON 22
 #define ID_SWORD 31
@@ -21,6 +22,13 @@ using namespace std;
 
 class Map{
 	public:
+        Texture2D dirtTexture = LoadTexture("assets/blocks/dirt.png");
+        Texture2D grassTexture = LoadTexture("assets/blocks/grass.png");
+
+        Texture2D swordTexture = LoadTexture("assets/items/sword.png");
+        Texture2D tntTexture = LoadTexture("assets/items/tnt.png");
+        Texture2D totemTexture = LoadTexture("assets/items/totem.png");
+
         int map[WORLD_HEIGHT][WORLD_WIDTH] = {
             {0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0},
             {0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0},
@@ -28,14 +36,14 @@ class Map{
             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0},
             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
             {0, 0, 0, 0, 0, 0, 0, 21, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 0},
-            {0, 0, 0, 31, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0},
-            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0},
-            {0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0},
+            {0, 0, 0, 31, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 0, 1, 0},
+            {0, 0, 0, 2, 0, 2, 0, 2, 0, 0, 1, 0, 0, 0, 0, 0, 2, 0, 0, 1, 0},
             {0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0},
-            {0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0},
+            {0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 2, 0, 0, 1, 0, 0, 0, 0},
+            {0, 2, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0},
             {0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0},
-            {0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0},
-            {0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0},
+            {0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 2, 0},
             {0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0}
         };
 
@@ -44,8 +52,11 @@ class Map{
             {
                 for (int x = 0; x < WORLD_WIDTH; x++)
                 {
-                    if (map[y][x] == ID_BLOCK) {
-                        DrawRectangle(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE, GREEN);
+                    if (map[y][x] == ID_DIRT) {
+                        DrawTexture(dirtTexture, x * TILE_SIZE, y * TILE_SIZE, WHITE);
+                    }
+                    if (map[y][x] == ID_GRASS) {
+                        DrawTexture(grassTexture, x * TILE_SIZE, y * TILE_SIZE, WHITE);
                     }
                 }
             }
@@ -57,13 +68,13 @@ class Map{
                 for (int x = 0; x < WORLD_WIDTH; x++)
                 {
                     if (map[y][x] == ID_SWORD) {
-                        DrawRectangle(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE, WHITE);
+                        DrawTexture(swordTexture, x * TILE_SIZE, y * TILE_SIZE, WHITE);
                     }
                     if (map[y][x] == ID_TNT) {
-                        DrawRectangle(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE, WHITE);
+                        DrawTexture(tntTexture, x * TILE_SIZE, y * TILE_SIZE, WHITE);
                     }
                     if (map[y][x] == ID_TOTEM) {
-                        DrawRectangle(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE, GOLD);
+                        DrawTexture(totemTexture, x * TILE_SIZE, y * TILE_SIZE, WHITE);
                     }
                 }
             }

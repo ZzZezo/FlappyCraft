@@ -2,8 +2,27 @@
 #include "Player.h"
 #pragma once
 
-const int heartsMargin = 5;
-const int heartsSize = 20;
+const int heartsMargin = 2;
+const int heartsSize = 32;
+
+const int invSlotMargin = 10;
+const int invSlotSize = 75;
+const int invSlotBorderThickness = 7;
+
+Texture2D heartTexture;
+Texture2D swapTexture;
+Texture2D leftTexture, rightTexture;
+Texture2D itemSword, itemTNT, itemTotem;
+
+void loadGUITextures() {
+	heartTexture = LoadTexture("assets/ui/heart.png");
+	swapTexture = LoadTexture("assets/ui/swap.png");
+	leftTexture = LoadTexture("assets/ui/left.png");
+	rightTexture = LoadTexture("assets/ui/right.png");
+	itemSword = LoadTexture("assets/items/sword.png");
+	itemTNT = LoadTexture("assets/items/tnt.png");
+	itemTotem = LoadTexture("assets/items/totem.png");
+}
 
 void drawGUI(int screenWidth, int screenHeight, Player player) {
 	//health bar in top right corner
@@ -14,8 +33,28 @@ void drawGUI(int screenWidth, int screenHeight, Player player) {
 		int y = heartsMargin;
 
 		if (i < (10 - player.health))
-			DrawRectangle(x, y, heartsSize, heartsSize, BLACK);//empty heart
+			DrawTexture(heartTexture, x, y, BLACK);//empty heart
 		else
-			DrawRectangle(x, y, heartsSize, heartsSize, RED);//full heart
+			DrawTexture(heartTexture, x, y, WHITE);// full heart
 	}
+	//items in top left corner
+	//first slot
+	DrawRectangleLinesEx(Rectangle{ invSlotMargin, invSlotMargin, invSlotSize, invSlotSize },invSlotBorderThickness, BLACK);
+	DrawTexture(leftTexture, invSlotMargin, invSlotMargin*2+invSlotSize, WHITE);
+	//swap
+    DrawTexture(swapTexture, invSlotMargin*2+invSlotSize, invSlotMargin, player.swapColor);
+	//second slot
+	DrawRectangleLinesEx(Rectangle{ invSlotMargin*3+invSlotSize*2, invSlotMargin, invSlotSize, invSlotSize }, invSlotBorderThickness, BLACK);
+	DrawTexture(rightTexture, invSlotMargin*3+invSlotSize*2, invSlotMargin*2+invSlotSize, WHITE);
+}
+
+void DrawItems(string Left, string Right) {
+	if(Left == "SWORD") DrawTexture(itemSword, invSlotMargin+invSlotBorderThickness, invSlotMargin+invSlotBorderThickness, WHITE);
+	if (Right == "SWORD") DrawTexture(itemSword, invSlotMargin*3+invSlotSize*2+invSlotBorderThickness, invSlotMargin+invSlotBorderThickness, WHITE);
+
+	if (Left == "TNT") DrawTexture(itemTNT, invSlotMargin + invSlotBorderThickness, invSlotMargin + invSlotBorderThickness, WHITE);
+	if (Right == "TNT") DrawTexture(itemTNT, invSlotMargin * 3 + invSlotSize * 2 + invSlotBorderThickness, invSlotMargin + invSlotBorderThickness, WHITE);
+
+	if (Left == "TOTEM") DrawTexture(itemTotem, invSlotMargin + invSlotBorderThickness, invSlotMargin + invSlotBorderThickness, WHITE);
+	if (Right == "TOTEM") DrawTexture(itemTotem, invSlotMargin * 3 + invSlotSize * 2 + invSlotBorderThickness, invSlotMargin + invSlotBorderThickness, WHITE);
 }

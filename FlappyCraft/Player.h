@@ -7,7 +7,7 @@ using namespace std;
 #include "sceneManager.h"
 #pragma once
 
-#define ID_BLOCK 1
+#define ID_DIRT 1
 #define ID_SWORD 31
 #define ID_TNT 32
 #define ID_TOTEM 33
@@ -18,7 +18,7 @@ class Player{
 		float yPos = 10;
 		const int xScale = 50;
 		const int yScale = 50;
-		Color pColor = BLUE;
+		Color pColor = WHITE;
 
 		const int maxHealth = 10;
 		int health = maxHealth;
@@ -26,8 +26,9 @@ class Player{
 		const int healthImmunityTimerMax = 30; //the value to reset the timer back to
 
 		string LeftHand = "EMPTY";
-		string RightHand = "EMPTY";
+		string RightHand = "TNT";
 		string LastUsedHand = "NONE";
+		Color swapColor = WHITE;
 
 		float speed = 1.5f; //horizontal speed
 
@@ -49,7 +50,12 @@ class Player{
 			if(IsMouseButtonReleased(MOUSE_BUTTON_LEFT))useHandItem("LEFT"); //leftclick -> use item in left hand
 			if(IsMouseButtonReleased(MOUSE_BUTTON_RIGHT))useHandItem("RIGHT"); //rightclick -> use item in right hand
 			
-			if(IsKeyReleased(KEY_F))swapHands();
+			if (IsKeyDown(KEY_F)) swapColor = ORANGE;
+
+			if (IsKeyReleased(KEY_F)) { 
+				swapHands(); 
+				swapColor = WHITE;
+			}
 
 			if (IsKeyReleased(KEY_SPACE)){//check if player is jumping
 				jump();
@@ -68,8 +74,8 @@ class Player{
 		}
 
 		void updateColor() {
-			if(healthImmunityTimer>0) pColor = RED;
-			else pColor = BLUE;
+			if(healthImmunityTimer>0) pColor = Color { 255, 160, 160, 255 };
+			else pColor = WHITE;
 		}
 
 		void jump() {
@@ -82,7 +88,10 @@ class Player{
 
 		int checkCollisionWithMap(Map& map) {
 			if (xPos + xScale > 0 && yPos+yScale > 0) {
-				if (checkCollisionType(ID_BLOCK, map) > 0){
+				if (checkCollisionType(ID_DIRT, map) > 0){
+					getDamaged(1);
+				}
+				if (checkCollisionType(ID_GRASS, map) > 0) {
 					getDamaged(1);
 				}
 				if (checkCollisionType(ID_SWORD ,map) > 0){
@@ -119,13 +128,14 @@ class Player{
 
 					if (!enemy->alive)return;
 					//if colliding
-					getDamaged(2);
+					getDamaged(enemy->attackDamage);
 				}
 			}
 		}
 
 		void getDamaged(int dmg) {
 			if(healthImmunityTimer>0) return;//dont damage player if he is ímmune
+			if (dmg <= 0) return; //dont give immunity/red color if no damage is dealt
 			health -= dmg;
 			healthImmunityTimer = healthImmunityTimerMax;
 			if(health <= 0) onDeath();
@@ -163,7 +173,7 @@ class Player{
 			if(item == "TEST") cout << "Test item used";
 			if(item == "SWORD") attackMelee(128);
 			if(item == "TNT") attackExplosion(128);
-			if (item == "TOTEM") return;
+			if(item == "TOTEM") return;
 		}
 
 		int pickUpItem(string item) {
@@ -205,10 +215,10 @@ class Player{
 		}
 
 		void attackExplosion(int range) {
-			int yTile = floor(yPos / 64);
-			int xTile = floor(xPos / 64);
-			int rangeTile = floor(range / 64) +1;
-			cout << yTile << " " << xTile << " " << rangeTile << endl;
+			int yTile = floor(yPos / 64); //convert coordinate position into map-tileset pos
+			int xTile = floor(xPos / 64); //convert coordinate position into map-tileset pos
+			int rangeTile = floor(range / 64) + 1; //convert range position into map-tileset range
+			cout << "Triggered an Explosion at Tile " << yTile << " " << xTile << " with a range of " << rangeTile << endl;
 			killArea(yPos, xPos, range);
 			mapCurrent->removeArea(yTile, xTile, rangeTile);
 			if (LastUsedHand == "LEFT") LeftHand = "EMPTY";
