@@ -7,14 +7,13 @@ using namespace std;
 #include "sceneManager.h"
 #pragma once
 
-#define ID_DIRT 1
 #define ID_SWORD 31
 #define ID_TNT 32
 #define ID_TOTEM 33
 
 class Player{
 	public:
-		float xPos = -500;
+		float xPos = 800;
 		float yPos = 10;
 		const int xScale = 50;
 		const int yScale = 50;
@@ -88,11 +87,11 @@ class Player{
 
 		int checkCollisionWithMap(Map& map) {
 			if (xPos + xScale > 0 && yPos+yScale > 0) {
-				if (checkCollisionType(ID_DIRT, map) > 0){
-					getDamaged(1);
-				}
-				if (checkCollisionType(ID_GRASS, map) > 0) {
-					getDamaged(1);
+				for (int id = 1; id <= 10; id++) { // Adjust range as needed for valid IDs
+					if (checkCollisionType(id, map) > 0) {
+						getDamaged(1);
+						break; // Exit loop if damage is dealt; remove this line if multiple damages are possible
+					}
 				}
 				if (checkCollisionType(ID_SWORD ,map) > 0){
 					pickUpItemByPos(ID_SWORD, map, "SWORD");
@@ -172,7 +171,7 @@ class Player{
 			if(item == "EMPTY") return;
 			if(item == "TEST") cout << "Test item used";
 			if(item == "SWORD") attackMelee(128);
-			if(item == "TNT") attackExplosion(128);
+			if(item == "TNT") attackExplosion(192);
 			if(item == "TOTEM") return;
 		}
 
