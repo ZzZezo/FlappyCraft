@@ -1,80 +1,16 @@
-#include "raylib.h"
-#include <iostream>
-#include <vector>
-using namespace std;
-
-#include "gui.h"
-#include "sceneManager.h"
-
-//classes
-#include "Player.h"
-#include "Map.h"
-#include "Enemy.h"
-
-//Global Variables
-const int screenWidth = 1600;
-const int screenHeight = 960;
-
-Player player;
-vector<Enemy*> enemies;
-
+#include "loadScenes.h"
+#include "globals.h"
 
 int main(void) {
 	InitWindow(screenWidth, screenHeight, "Flappy Craft");
 	SetTargetFPS(60);
 
-	Texture2D playerTexture = LoadTexture("assets/zezo.png");
 	loadGUITextures();
-
-	Map map;
-
-	Camera2D camera = { 0 };
-	camera.target = {player.xPos + player.xScale/2, player.yPos + player.yScale/2};
-	camera.offset = {screenWidth/2, screenHeight/2};
-	camera.zoom = 1.0f;
-
-	enemies = map.getEnemies();
+	loadScenes();
 
 	while (!WindowShouldClose()) {
-		if (currentScene == "GAME") {
-			player.updatePlayer(map, enemies);
-
-			camera.target = { player.xPos + player.xScale / 2, player.yPos + player.yScale / 2 };
-
-			//cout << player.LeftHand << " " << player.RightHand << endl;
-
-			vector<Enemy*> newEnemies;
-			for (Enemy*& enemy : enemies) {
-				enemy->update(enemies, newEnemies);
-			}
-			enemies.insert(enemies.end(), newEnemies.begin(), newEnemies.end());
-
-			BeginDrawing();
-				BeginMode2D(camera);
-					ClearBackground(SKYBLUE);
-					map.drawMap();
-					map.drawItems();
-					for (Enemy*& enemy : enemies) enemy->draw();
-					DrawTexture(playerTexture, player.xPos, player.yPos, player.pColor);
-				EndMode2D();
-				drawGUI(screenWidth, screenHeight, player);
-				DrawItems(player.LeftHand, player.RightHand);
-			EndDrawing();
-		}
-		else if (currentScene == "DEATH") {
-			BeginDrawing();
-				ClearBackground(Color{224, 85, 85});
-			EndDrawing();
-		}
-		else if (currentScene == "WIN") {
-
-		}
-		else if (currentScene == "PAUSE") {
-		
-		}
-		else if (currentScene == "MENU") {
-		
-		}
+		sceneManager.update();
+		sceneManager.draw();
 	}
 
 	CloseWindow();
