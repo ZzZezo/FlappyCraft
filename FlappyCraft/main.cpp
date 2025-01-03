@@ -3,6 +3,7 @@
 
 int main(void) {
 	InitWindow(screenWidth, screenHeight, "Flappy Craft");
+	SetWindowIcon(LoadImage("assets/icon.png"));
 	SetTargetFPS(60);
 
 	loadGUITextures();
