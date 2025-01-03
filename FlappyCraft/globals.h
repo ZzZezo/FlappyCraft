@@ -13,3 +13,5 @@ extern string username;
 extern std::vector<Enemy*> enemies;
 extern Player player;
 extern Map map;
+
+extern string getUsernameFromFile();

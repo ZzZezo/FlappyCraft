@@ -2,6 +2,7 @@
 #include "Scene.h"
 #include "globals.h"
 #include "raylib.h"
+#include <fstream>
 
 class UserScene : public Scene {
 public:
@@ -24,6 +25,7 @@ public:
         if(IsKeyPressed(KEY_ENTER))
         {
             if(username.length()==0) username = "Steve";
+            saveUsernameToFile();
             SceneManager::getInstance().changeScene("MENU");
         }
         if (IsKeyPressed(KEY_BACKSPACE)) {
@@ -38,6 +40,12 @@ public:
             }
         }
     }
+
+    void saveUsernameToFile() {
+		std::ofstream file("data/user.txt");
+		file << username;
+		file.close();
+	}
 
     std::string getSceneName() const override {
         return "USER";
