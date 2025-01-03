@@ -3,6 +3,9 @@
 #include "raylib.h"
 #include <iostream>
 #include <array>
+#include <fstream>
+#include <regex>
+#include <algorithm>
 using namespace std;
 #include "sceneManager.h"
 #pragma once
@@ -21,7 +24,7 @@ public:
 	const int yScale = 50;
 	Color pColor = WHITE;
 
-	const int maxHealth = 1;
+	const int maxHealth = 10;
 	int health = maxHealth;
 	int healthImmunityTimer = 0; //player can only be hurt when this is zero
 	const int healthImmunityTimerMax = 30; //the value to reset the timer back to
@@ -32,13 +35,14 @@ public:
 	string LastUsedHand = "NONE";
 	Color swapColor = WHITE;
 
-	float speed = 1.5f; //horizontal speed
+	float speed = 1.3f; //horizontal speed
 
 	float velocity = 0.0f; //the speed player is falling downwards
 	float gravity = 0.5f; //how much the velocity is increasing
 	float jumpStrength = 10.0f;
 
 	int score = 0;
+	string username;
 
 	vector<Enemy*> enemiesCurrent;
 	Map* mapCurrent;
@@ -49,7 +53,8 @@ public:
 		playerTexture = LoadTexture("assets/zezo.png");
 	}
 
-	void updatePlayer(Map& map, vector<Enemy*>& enemies) {
+	void updatePlayer(Map& map, vector<Enemy*>& enemies, string pusername) {
+		username = pusername;
 		applyGravity();
 
 		enemiesCurrent = enemies;
@@ -69,6 +74,8 @@ public:
 		if (IsKeyReleased(KEY_SPACE)) {//check if player is jumping
 			jump();
 		}
+
+		if (IsKeyReleased(KEY_P)) onDeath();
 
 		updatePos();
 		updateColor();
@@ -157,6 +164,7 @@ public:
 			return;
 		}
 		calculateScore();
+		updateHighscoreList();
 		isDead = true;
 	}
 
@@ -248,6 +256,7 @@ public:
 
 	void useTotem() {
 		health = 3;
+		if (maxHealth < health) health = maxHealth;
 		healthImmunityTimer = healthImmunityTimerMax;
 
 		if (LeftHand == "TOTEM") LeftHand = "EMPTY";
@@ -256,6 +265,34 @@ public:
 
 	void calculateScore() {
 		score = xPos - xPosStart;
-		score = score / 64;
+		score = score / TILE_SIZE;
+	}
+
+	void updateHighscoreList() {
+		vector<pair<string, int>> rankings;
+		string line;
+		ifstream inFile("data/rankings.txt");
+		regex pattern(R"((.*) \((\d+)\))");
+		//Read file
+		while (getline(inFile, line)) {
+			smatch matches;
+			if (regex_match(line, matches, pattern)) {
+				rankings.push_back({matches[1],stoi(matches[2])});
+			}
+		}
+		inFile.close();
+
+		//Add New Score
+		rankings.push_back({ username, score });
+
+		//Sort cector by scores
+		sort(rankings.begin(),rankings.end(),[](const auto& a, const auto& b){return a.second > b.second;});
+		
+		//Write File
+		ofstream outFile("data/rankings.txt");
+		for (const auto& rank : rankings) {
+			outFile << rank.first <<" (" << rank.second << ")\n";
+		}
+		outFile.close();
 	}
 };

@@ -8,8 +8,10 @@ public:
     Rectangle respawnButton = { (float)screenWidth / 2 - 250, (float)screenHeight / 2, 500, 60 };
     Rectangle titleScreenButton = { (float)screenWidth / 2 - 250, (float)screenHeight / 2 + 80, 500, 60 };
 
+    Color respawnButtonColor = GRAY;
+    Color titleScreenButtonColor = GRAY;
+
     void update() override {
-        // Handle any death-related logic
     }
 
     void draw() override {
@@ -19,22 +21,23 @@ public:
         DrawText("You Died!", screenWidth / 2 - 220, screenHeight / 3 - 100, 100, WHITE);
         DrawText(("Score: " + std::to_string(player.score)).c_str(), screenWidth / 2 - 75, screenHeight / 3, 40, WHITE);
 
-        DrawRectangleRec(respawnButton, GRAY);
+        DrawRectangleRec(respawnButton, respawnButtonColor);
         DrawText("Respawn", screenWidth / 2 - MeasureText("Respawn", 40) / 2, screenHeight / 2 + 10, 40, WHITE);
 
-        DrawRectangleRec(titleScreenButton, GRAY);
+        DrawRectangleRec(titleScreenButton, titleScreenButtonColor);
         DrawText("Title Screen", screenWidth / 2 - MeasureText("Title Screen", 40) / 2, screenHeight / 2 + 90, 40, WHITE);
         EndDrawing();
     }
 
     void handleInput() override {
         // Handle user input (e.g., button click to go to menu or restart)
-        if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-            Vector2 mousePos = GetMousePosition();
-            if (CheckCollisionPointRec(mousePos, respawnButton)) {
+        Vector2 mousePos = GetMousePosition();
+        if (CheckCollisionPointRec(mousePos, respawnButton)) {
+            respawnButtonColor = DARKGRAY;
+            if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
                 player.health = player.maxHealth;
                 player.xPos = player.xPosStart;
-				player.yPos = player.yPosStart;
+                player.yPos = player.yPosStart;
                 player.healthImmunityTimer = 0;
                 player.isDead = false;
                 player.LeftHand = "EMPTY";
@@ -47,9 +50,16 @@ public:
                 enemies = map.getEnemies();
                 SceneManager::getInstance().changeScene("GAME");
             }
-            else if (CheckCollisionPointRec(mousePos, titleScreenButton)) {
+        }
+        else if (CheckCollisionPointRec(mousePos, titleScreenButton)) {
+            titleScreenButtonColor = DARKGRAY;
+            if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
                 SceneManager::getInstance().changeScene("MENU");
             }
+        }
+        else {
+			respawnButtonColor = GRAY;
+			titleScreenButtonColor = GRAY;
         }
     }
 

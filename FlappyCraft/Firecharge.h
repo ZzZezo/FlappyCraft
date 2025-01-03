@@ -11,6 +11,7 @@ public:
 		xScale = 64;
 		yScale = 64;
 		killable = false;
+		attackDamage = 3;
 	}
 
 	void update(vector<Enemy*>& enemies, vector<Enemy*>& newEnemies) override {

@@ -6,6 +6,7 @@ const int screenHeight = 960;
 
 // Define the other globals
 string currentScene = "GAME";
+string username = "Steve";
 std::vector<Enemy*> enemies;
 
 Player player;

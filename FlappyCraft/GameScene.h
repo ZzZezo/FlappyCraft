@@ -26,7 +26,7 @@ public:
     }
 
     void update() override {
-        player.updatePlayer(map, enemies);
+        player.updatePlayer(map, enemies, username);
         camera.target = { player.xPos + player.xScale / 2, player.yPos + player.yScale / 2 };
         // Update enemies, and other game logic
         vector<Enemy*> newEnemies;

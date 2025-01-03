@@ -14,6 +14,7 @@ public:
 		xPosStart = x;
 		yPosStart = y;
 		enemyTexture = LoadTexture("assets/entities/ghast.png");
+		attackDamage = 3;
 	}
 
 	void update(vector<Enemy*>& enemies, vector<Enemy*>& newEnemies) override {
