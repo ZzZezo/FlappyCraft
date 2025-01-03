@@ -49,7 +49,9 @@ public:
             DrawText("Quit Game", screenWidth / 2 - MeasureText("Quit Game", 40) / 2, screenHeight / 2 -10 + 240, 40, WHITE);
 
             //"Splash" Text
-            DrawTextPro(GetFontDefault(), splashtext.c_str(), Vector2{1300.0f-MeasureText(splashtext.c_str(), 35) / 2,300.0f+MeasureText(splashtext.c_str(), 35)/5  }, Vector2{0,0}, -25.0f, 35, 2.0f, YELLOW);
+            float time = GetTime();//get time with game open
+            float splashscale = sin(time) * 0.1f + 1.0f;//modify scale so it is animated
+            DrawTextPro(GetFontDefault(), splashtext.c_str(), Vector2{ 1300.0f - MeasureText(splashtext.c_str(), 35) / 2, 300.0f + MeasureText(splashtext.c_str(), 35) / 5 }, Vector2{ 0, 0 }, -25.0f, 35 * splashscale, 2.0f, YELLOW);
         EndDrawing();
     }
 
